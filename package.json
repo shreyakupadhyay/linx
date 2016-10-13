@@ -6,10 +6,20 @@
   "author": "Gaurav Koley",
   "license": "MIT",
   "dependencies": {
+    "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.15.2",
+    "connect-flash": "^0.1.1",
     "crypto": "^0.0.3",
     "express": "^4.14.0",
+    "express-flash": "^0.0.2",
+    "express-mysql-session": "^1.2.0",
+    "express-session": "^1.14.1",
     "mysql": "^2.11.1",
-    "sequelize": "^3.24.3"
+    "passport": "^0.3.2",
+    "passport-azure-oauth": "^0.0.6",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.0-beta6",
+    "sequelize": "^3.24.3",
+    "session-file-store": "^0.2.2"
   }
 }
