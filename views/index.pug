@@ -1,24 +1,4 @@
 extends layout
 
-block title
-  title Login to linx
-
 block content
-  .columns
-    .column.is-half.is-offset-one-quarter
-      .card.is-fullwidth
-        .card-content
-          .content
-            each m in message
-              .notification.is-danger
-                button.delete
-                = m
-            h1.text-center Login!
-            form(action='/login' method='POST')
-              p.control
-                label.label(for='username') Email Address
-                input.input(name='username')
-              p.control
-                label.label(for='password') Password
-                input.input(name='password' type='password')
-              button.button.is-primary(type='submit') Login
+  p= "hello"

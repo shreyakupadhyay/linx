@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block title
   title Register | linx
@@ -9,10 +9,10 @@ block content
       .card.is-fullwidth
         .card-content
           .content
-            //- each m in errors
-            //-   .notification.is-danger
-            //-     button.delete
-            //-     = m
+            each m in message
+              .notification.is-danger
+                button.delete
+                = m
             h1.text-center Register
             form(action='/register' method='POST')
               p.control

@@ -12,7 +12,8 @@ exports.getLogin = (req, res) => {
     return res.redirect('/');
   }
   res.render('account/login', {
-    title: 'Login'
+    title: 'Login',
+    message: req.flash('message')
   });
 };
 
@@ -63,8 +64,9 @@ exports.getRegister = (req, res) => {
   if (req.user) {
     return res.redirect('/');
   }
-  res.render('register', {
-    title: 'Create Account'
+  res.render('account/register', {
+    title: 'Create Account',
+    message: req.flash('message')
   });
 };
 
