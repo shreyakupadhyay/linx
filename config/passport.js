@@ -9,11 +9,13 @@ const AzureOAuthStrategy = require('passport-azure-oauth').Strategy;
 const User = require('../models/').User;
 
 passport.serializeUser((user, done) => {
+  console.log("serializing");
   return done(null, user.id);
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
+  console.log("deserializing");
+  User.findById(id).then((err, user) => {
     return done(err, user);
   });
 });
@@ -26,8 +28,7 @@ passport.use(new LocalStrategy({
     passReqToCallback : true
   }, (email, password, done) => {
   User.findOne({ where: {email: email.toLowerCase()} })
-  .then((err, user) => {
-      if (err) { return done(err); }
+  .then(user => {
       if (!user) {
         return done(null, false, { msg: `Email ${email} not found.` });
       }
@@ -68,16 +69,14 @@ passport.use(new FacebookStrategy({
   }, (req, accessToken, refreshToken, profile, done) => {
   if (req.user) {
     User.findOne({ where: { facebookId: profile.id }})
-		.then((err, existingUser) => {
-      if (err) { return done(err); }
+		.then(existingUser => {
       if (existingUser) {
         req.flash('errors', { msg: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
-        return done(err);
+        return done(null, existingUser);
       } else {
-        User.findById(req.user.id, (err, user) => {
-          if (err) { return done(err); }
+        User.findById(req.user.id).then(user => {
           user.facebookId     = profile.id; // set the users facebook id
-          user.save().then((err) => {
+          user.save().then(err => {
             req.flash('info', { msg: 'Facebook account has been linked.' });
             return done(err, user);
           });
@@ -86,17 +85,15 @@ passport.use(new FacebookStrategy({
     });
   } else {
     User.findOne({ where: { facebookId: profile.id }})
-		.then((err, existingUser) => {
-      if (err) { return done(err); }
+		.then((existingUser) => {
       if (existingUser) {
         return done(null, existingUser);
       }
       User.findOne({ where: { email: profile._json.email }})
-			.then((err, existingEmailUser) => {
-        if (err) { return done(err); }
+			.then(existingEmailUser => {
         if (existingEmailUser) {
           req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.' });
-          return done(err);
+          return done(null, existingEmailUser);
         } else {
           var user = User.build();
           user.facebookId = profile.id;
@@ -104,7 +101,7 @@ passport.use(new FacebookStrategy({
           user.password = accessToken;
           user.username = (profile.name.givenName + '_' + profile.name.familyName).toLowerCase();
           user.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
-          user.save().then((err) => {
+          user.save().then(err => {
             return done(err, user);
           });
         }
@@ -126,15 +123,14 @@ passport.use(new AzureOAuthStrategy({
   }, (req, accessToken, refreshToken, profile, done) => {
   if (req.user) {
     User.findOne({ where: { officeId: profile.username }})
-		.then((err, existingUser) => {
+		.then(existingUser => {
       if (existingUser) {
         req.flash('errors', { msg: 'There is already a Office365 account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
-        return done(err);
+        return done(null, existingUser);
       } else {
-        User.findById(req.user.id).then((err, user) => {
-          if (err) { return done(err); }
+        User.findById(req.user.id).then(user => {
           user.officeId = profile.id;
-          user.save().then((err) => {
+          user.save().then(err => {
             req.flash('info', { msg: 'Office365 account has been linked.' });
             return done(err, user);
           });
@@ -143,17 +139,15 @@ passport.use(new AzureOAuthStrategy({
     });
   } else {
     User.findOne({ where: { officeId: profile.id }})
-		.then((err, existingUser) => {
-      if (err) { return done(err); }
+		.then(existingUser => {
       if (existingUser) {
         return done(null, existingUser);
       }
       User.findOne({ where: { email: profile.username }})
-			.then((err, existingEmailUser) => {
-        if (err) { return done(err); }
+			.then(existingEmailUser => {
         if (existingEmailUser) {
           req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Office365 manually from Account Settings.' });
-          return done(err);
+          return done(null, existingEmailUser);
         } else {
           const user = User.build();
           user.email = profile.username;
@@ -161,7 +155,7 @@ passport.use(new AzureOAuthStrategy({
           user.password = user.createHash(accessToken);
           user.username = profile.username.split("@")[0];
           user.name = profile.displayname;
-          user.save().then((err) => {
+          user.save().then(err => {
             return done(err, user);
           });
         }
@@ -187,7 +181,7 @@ exports.isAuthenticated = (req, res, next) => {
 exports.isAuthorized = (req, res, next) => {
   const provider = req.path.split('/').slice(-1)[0];
 
-  if (_.find(req.user.tokens, { kind: provider })) {
+  if (req.user.tokens.find({ kind: provider })) {
     next();
   } else {
     res.redirect(`/auth/${provider}`);
