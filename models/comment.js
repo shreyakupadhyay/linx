@@ -16,9 +16,9 @@ module.exports = function(sequelize) {
   }, {
     freezeTableName: true,
     classMethods: {
-      associate() {
-        Comment.belongsTo(sequelize.models.User, { foreignKey: 'postedBy' });
-        Comment.belongsTo(sequelize.models.Post, { foreignKey: 'postedOn' });
+      associate(models) {
+        Comment.belongsTo(models.User, { foreignKey: 'postedBy' });
+        Comment.belongsTo(models.Post, { foreignKey: 'postedOn' });
       },
     },
   });

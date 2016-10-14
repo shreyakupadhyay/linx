@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const userController = require('../controllers/user');
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler
@@ -19,25 +20,28 @@ module.exports = function(passport){
 		res.render('index', { message: req.flash('message') });
 	});
 
-	/* Handle Login POST */
-	router.post('/login', passport.authenticate('login', {
-		successRedirect: '/home',
-		failureRedirect: '/',
-		failureFlash : true
-	}));
+	router.get('/login', userController.getLogin);
+	router.post('/login', userController.postLogin);
+	router.get('/register', userController.getRegister);
+	router.post('/register', userController.postRegister);
 
-	/* GET Registration Page */
-	router.get('/register', function(req, res){
-		res.render('register',{message: req.flash('message')});
+
+	/**
+	 * OAuth authentication routes. (Sign in)
+	 */
+	router.get('/auth/office', passport.authenticate('azureoauth'));
+	router.get('/auth/office/callback', passport.authenticate('azureoauth', { failureRedirect: '/login', successRedirect: '/' }), (req, res) => {
+	  res.redirect(req.session.returnTo || '/');
 	});
-
-	/* Handle Registration POST */
-	router.post('/register', passport.authenticate('register', {
-		successRedirect: '/home',
-		failureRedirect: '/register',
-		failureFlash : true
-	}));
-
+	router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
+	router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login', successRedirect: '/' }), (req, res) => {
+		console.log("JSON.serialize");
+	  res.redirect('/');
+	});
+	// router.get('/auth/github', passport.authenticate('github'));
+	// router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), (req, res) => {
+	//   res.redirect(req.session.returnTo || '/');
+	// });
 	/* GET Home Page */
 	router.get('/home', isAuthenticated, function(req, res){
 		res.render('home', { user: req.user });

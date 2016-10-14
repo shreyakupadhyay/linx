@@ -5,6 +5,10 @@
   "main": "app.js",
   "author": "Gaurav Koley",
   "license": "MIT",
+  "scripts": {
+    "start": "node app.js",
+    "serve": "nodemon app.js"
+  },
   "dependencies": {
     "bcrypt-nodejs": "^0.0.3",
     "body-parser": "^1.15.2",
@@ -14,12 +18,18 @@
     "express-flash": "^0.0.2",
     "express-mysql-session": "^1.2.0",
     "express-session": "^1.14.1",
+    "express-validator": "^2.20.10",
     "mysql": "^2.11.1",
     "passport": "^0.3.2",
     "passport-azure-oauth": "^0.0.6",
+    "passport-facebook": "^2.1.1",
+    "passport-github": "^1.1.0",
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-beta6",
     "sequelize": "^3.24.3",
     "session-file-store": "^0.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }

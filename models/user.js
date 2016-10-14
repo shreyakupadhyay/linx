@@ -1,5 +1,5 @@
 'use strict';
-
+const bcrypt = require('bcrypt-nodejs');
 // user.js - A sequelize model
 //
 // See http://docs.sequelizejs.com/en/latest/docs/models-definition/
@@ -41,19 +41,26 @@ module.exports = function(sequelize) {
   }, {
     freezeTableName: true,
     classMethods: {
-      associate() {
-        User.hasMany(sequelize.models.Post, {
+      associate(models) {
+        User.hasMany(models.Post, {
           as: 'Posts',
           onDelete: 'CASCADE',
           foreignKey: 'postedBy'
         });
-        User.hasMany(sequelize.models.Comment, {
+        User.hasMany(models.Comment, {
           as: 'Comments',
           onDelete: 'CASCADE',
           foreignKey: 'postedBy'
         });
       },
-    },
+    }, instanceMethods: {
+      comparePassword: function(password) {
+        return bcrypt.compareSync(password, this.password);
+      },
+      createHash: function(password){
+          return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+      }
+    }
    });
 
   return User;

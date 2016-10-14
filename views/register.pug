@@ -1,0 +1,32 @@
+extends layout
+
+block title
+  title Register | linx
+
+block content
+  .columns
+    .column.is-half.is-offset-one-quarter
+      .card.is-fullwidth
+        .card-content
+          .content
+            //- each m in errors
+            //-   .notification.is-danger
+            //-     button.delete
+            //-     = m
+            h1.text-center Register
+            form(action='/register' method='POST')
+              p.control
+                label.label Name
+                input.input(type='text', name='name', placeholder='Name',required)
+              p.control
+                label.label Username
+                input.input(type='text', name='username', placeholder='Username', pattern="Hello|Can",required, autofocus)
+              p.control
+                label.label Password
+                input.input(type='password', name='password', placeholder='Password', required)
+              p.control
+                label.label Emil
+                input.input(type='email', name='email', placeholder='Email',required)
+              p.control
+                button.button.is-primary(type='submit') Login
+              span.clearfix
