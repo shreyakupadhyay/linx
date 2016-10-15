@@ -13,7 +13,7 @@ exports.getLogin = (req, res) => {
   }
   res.render('account/login', {
     title: 'Login',
-    message: req.flash('message')
+    errors: req.flash('errors')
   });
 };
 
@@ -27,19 +27,22 @@ exports.postLogin = (req, res, next) => {
   req.sanitize('email').normalizeEmail({ remove_dots: false });
 
   const errors = req.validationErrors();
-
+  console.log("post");
   if (errors) {
     req.flash('errors', errors);
+    console.log(errors);
     return res.redirect('/login');
   }
-
+  console.log("post1");
   passport.authenticate('local', (err, user, info) => {
     if (err) { return next(err); }
+    console.log("post2");
     if (!user) {
       req.flash('errors', info);
       return res.redirect('/login');
     }
-    req.logIn(user, (err) => {
+    console.log("post3");
+    req.login(user, (err) => {
       if (err) { return next(err); }
       req.flash('success', { msg: 'Success! You are logged in.' });
       res.redirect(req.session.returnTo || '/');
@@ -66,7 +69,7 @@ exports.getRegister = (req, res) => {
   }
   res.render('account/register', {
     title: 'Create Account',
-    message: req.flash('message')
+    errors: req.flash('errors')
   });
 };
 
@@ -88,24 +91,19 @@ exports.postRegister = (req, res, next) => {
   }
 
   User.findOne({ where: { email: req.body.email }})
-    .then((err, user) => {
-      if (err) {
-        req.flash('errors', errors);
-        return res.redirect('/register');
-      }
+    .then(user => {
       if (user) {
         req.flash('errors', { msg: 'Account with that email address already exists.' });
         return res.redirect('/register');
       }
-      console.log("1");
       var user = User.build();
       user.email = req.body.email;
       user.password = user.createHash(req.body.password);
       user.name = req.body.name;
       user.username = req.body.username;
-      user.save().then((err) => {
+      user.save().then(err => {
         if (err) { return next(err); }
-        req.logIn(user, (err) => {
+        req.login(user, (err) => {
           if (err) {
             return next(err);
           }

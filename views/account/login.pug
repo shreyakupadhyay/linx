@@ -9,15 +9,15 @@ block content
       .card.is-fullwidth
         .card-content
           .content
-            each m in message
+            each m in errors
               .notification.is-danger
                 button.delete
-                = m
+                = m.msg
             h1.text-center Login!
             form(action='/login' method='POST')
               p.control
-                label.label(for='username') Email Address
-                input.input(name='username')
+                label.label(for='email') Email Address
+                input.input(name='email')
               p.control
                 label.label(for='password') Password
                 input.input(name='password' type='password')

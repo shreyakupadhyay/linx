@@ -9,7 +9,7 @@ var isAuthenticated = function (req, res, next) {
 	if (req.isAuthenticated())
 		return next();
 	// if the user is not authenticated then redirect him to the login page
-	res.redirect('/');
+	res.redirect('/login');
 }
 
 module.exports = function(passport){
@@ -17,7 +17,9 @@ module.exports = function(passport){
 	/* GET login page. */
 	router.get('/', function(req, res) {
     	// Display the Login page with any flash message, if any
-		res.render('index', { message: req.flash('message') });
+		if(isAuthenticated())
+			res.send("he");
+		res.render('index', { errors: req.flash('message') });
 	});
 
 	router.get('/login', userController.getLogin);
@@ -48,10 +50,7 @@ module.exports = function(passport){
 	});
 
 	/* Handle Logout */
-	router.get('/logout', function(req, res) {
-		req.logout();
-		res.redirect('/');
-	});
+	router.get('/logout', userController.logout);
 
 	return router;
 }

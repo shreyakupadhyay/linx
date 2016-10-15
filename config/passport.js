@@ -26,13 +26,13 @@ passport.deserializeUser((id, done) => {
 passport.use(new LocalStrategy({
     usernameField: 'email',
     passReqToCallback : true
-  }, (email, password, done) => {
-  User.findOne({ where: {email: email.toLowerCase()} })
+  }, (req, email, password, done) => {
+  User.findOne({ where: {email: email.toString().toLowerCase()} })
   .then(user => {
       if (!user) {
         return done(null, false, { msg: `Email ${email} not found.` });
       }
-      if (!comparePassword(user, password)){
+      if (!user.comparePassword(password)){
           console.log('Invalid Password');
           return done(null, false, req.flash('message', 'Invalid Password')); // redirect back to login page
       }
@@ -99,7 +99,7 @@ passport.use(new FacebookStrategy({
           user.facebookId = profile.id;
           user.email = profile._json.email;
           user.password = accessToken;
-          user.username = (profile.name.givenName + '_' + profile.name.familyName).toLowerCase();
+          user.username = (profile.name.givenName + '_' + profile.name.familyName).toString().toLowerCase();
           user.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
           user.save().then(err => {
             return done(err, user);
