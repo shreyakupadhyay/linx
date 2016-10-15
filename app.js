@@ -41,6 +41,13 @@ app.get('/test', function(req, res) {
 });
 var routes = require('./routes/index')(passport);
 app.use('/', routes);
+app.use(function(err, req, res, next) {
+  console.log("\n\ntisis the error\n\n");
+  console.error(err);
+  console.log("\n\n\n\n")
+  next(err);
+  // res.status(500).send('Something broke!');
+});
 
 var port = process.env.PORT || 8080;
 

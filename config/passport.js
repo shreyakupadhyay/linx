@@ -15,8 +15,8 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   console.log("deserializing");
-  User.findById(id).then((err, user) => {
-    return done(err, user);
+  User.findById(id).then((user) => {
+    return done(null, user);
   });
 });
 
@@ -72,20 +72,20 @@ passport.use(new FacebookStrategy({
 		.then(existingUser => {
       if (existingUser) {
         req.flash('errors', { msg: 'There is already a Facebook account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
-        return done(null, existingUser);
+        return done(null, false);
       } else {
         User.findById(req.user.id).then(user => {
           user.facebookId     = profile.id; // set the users facebook id
-          user.save().then(err => {
+          user.save().then(user => {
             req.flash('info', { msg: 'Facebook account has been linked.' });
-            return done(err, user);
+            return done(null, user);
           });
         });
       }
     });
   } else {
     User.findOne({ where: { facebookId: profile.id }})
-		.then((existingUser) => {
+		.then(existingUser => {
       if (existingUser) {
         return done(null, existingUser);
       }
@@ -93,7 +93,7 @@ passport.use(new FacebookStrategy({
 			.then(existingEmailUser => {
         if (existingEmailUser) {
           req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Facebook manually from Account Settings.' });
-          return done(null, existingEmailUser);
+          done(null, false);
         } else {
           var user = User.build();
           user.facebookId = profile.id;
@@ -101,8 +101,8 @@ passport.use(new FacebookStrategy({
           user.password = accessToken;
           user.username = (profile.name.givenName + '_' + profile.name.familyName).toString().toLowerCase();
           user.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
-          user.save().then(err => {
-            return done(err, user);
+          user.save().then(user => {
+            done(null, user);
           });
         }
       });
@@ -119,26 +119,27 @@ passport.use(new AzureOAuthStrategy({
   tenantId    : config.AzureOAuth_AppTenantId,
   resource    : config.AzureOAuth_AuthResource,
   redirectURL : config.AzureOAuth_RedirectURL,
-  user        : config.AzureOAuth_User
+  user        : config.AzureOAuth_User,
+  passReqToCallback: true
   }, (req, accessToken, refreshToken, profile, done) => {
   if (req.user) {
     User.findOne({ where: { officeId: profile.username }})
 		.then(existingUser => {
       if (existingUser) {
         req.flash('errors', { msg: 'There is already a Office365 account that belongs to you. Sign in with that account or delete it, then link it with your current account.' });
-        return done(null, existingUser);
+        done(null, false);
       } else {
         User.findById(req.user.id).then(user => {
           user.officeId = profile.id;
-          user.save().then(err => {
+          user.save().then(user => {
             req.flash('info', { msg: 'Office365 account has been linked.' });
-            return done(err, user);
+            done(null, user);
           });
         });
       }
     });
   } else {
-    User.findOne({ where: { officeId: profile.id }})
+    User.findOne({ where: { officeId: profile.username }})
 		.then(existingUser => {
       if (existingUser) {
         return done(null, existingUser);
@@ -147,16 +148,16 @@ passport.use(new AzureOAuthStrategy({
 			.then(existingEmailUser => {
         if (existingEmailUser) {
           req.flash('errors', { msg: 'There is already an account using this email address. Sign in to that account and link it with Office365 manually from Account Settings.' });
-          return done(null, existingEmailUser);
+          done(null, false);
         } else {
           const user = User.build();
           user.email = profile.username;
-          user.officeId = profile.id;
+          user.officeId = profile.username;
           user.password = user.createHash(accessToken);
           user.username = profile.username.split("@")[0];
           user.name = profile.displayname;
-          user.save().then(err => {
-            return done(err, user);
+          user.save().then(user => {
+            done(null,user);
           });
         }
       });

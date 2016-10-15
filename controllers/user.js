@@ -42,8 +42,8 @@ exports.postLogin = (req, res, next) => {
       return res.redirect('/login');
     }
     console.log("post3");
-    req.login(user, (err) => {
-      if (err) { return next(err); }
+    req.logIn(user, (err) => {
+      if (err) { console.log("hl"); console.log(err); return next(err); }
       req.flash('success', { msg: 'Success! You are logged in.' });
       res.redirect(req.session.returnTo || '/');
     });
@@ -55,7 +55,9 @@ exports.postLogin = (req, res, next) => {
  * Log out.
  */
 exports.logout = (req, res) => {
+  console.log("logout");
   req.logout();
+  console.log("logedout");
   res.redirect('/');
 };
 
@@ -103,7 +105,7 @@ exports.postRegister = (req, res, next) => {
       user.username = req.body.username;
       user.save().then(err => {
         if (err) { return next(err); }
-        req.login(user, (err) => {
+        req.logIn(user, (err) => {
           if (err) {
             return next(err);
           }

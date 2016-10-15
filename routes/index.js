@@ -17,7 +17,7 @@ module.exports = function(passport){
 	/* GET login page. */
 	router.get('/', function(req, res) {
     	// Display the Login page with any flash message, if any
-		if(isAuthenticated())
+		if(req.isAuthenticated())
 			res.send("he");
 		res.render('index', { errors: req.flash('message') });
 	});
@@ -32,13 +32,13 @@ module.exports = function(passport){
 	 * OAuth authentication routes. (Sign in)
 	 */
 	router.get('/auth/office', passport.authenticate('azureoauth'));
-	router.get('/auth/office/callback', passport.authenticate('azureoauth', { failureRedirect: '/login', successRedirect: '/' }), (req, res) => {
+	router.get('/auth/office/callback', passport.authenticate('azureoauth', { failureRedirect: '/login' }), (req, res) => {
 	  res.redirect(req.session.returnTo || '/');
 	});
 	router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'user_location'] }));
-	router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login', successRedirect: '/' }), (req, res) => {
+	router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
 		console.log("JSON.serialize");
-	  res.redirect('/');
+		res.redirect(req.session.returnTo || '/');
 	});
 	// router.get('/auth/github', passport.authenticate('github'));
 	// router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), (req, res) => {

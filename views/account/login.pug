@@ -4,7 +4,7 @@ block title
   title Login to linx
 
 block content
-  .columns
+  .columns.is-narrow-desktop
     .column.is-half.is-offset-one-quarter
       .card.is-fullwidth
         .card-content
@@ -22,3 +22,10 @@ block content
                 label.label(for='password') Password
                 input.input(name='password' type='password')
               button.button.is-primary(type='submit') Login
+              br.is-half
+              br
+              .columns.has-text-centered
+                .column
+                  a.notification.button.is-info(href="/auth/facebook") Login using Facebook
+                .column
+                  a.button.is-primary.is-outlined(href="/auth/office") Login using Office365
