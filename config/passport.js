@@ -15,9 +15,9 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   console.log("deserializing");
-  User.findById(id).then((user) => {
+  User.findById(id).then(user => {
     return done(null, user);
-  });
+  }, done);
 });
 
 /**
@@ -79,10 +79,10 @@ passport.use(new FacebookStrategy({
           user.save().then(user => {
             req.flash('info', { msg: 'Facebook account has been linked.' });
             return done(null, user);
-          });
-        });
+          }, done);
+        }, done);
       }
-    });
+    }, done);
   } else {
     User.findOne({ where: { facebookId: profile.id }})
 		.then(existingUser => {
@@ -103,10 +103,10 @@ passport.use(new FacebookStrategy({
           user.name  = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
           user.save().then(user => {
             done(null, user);
-          });
+          }, done);
         }
-      });
-    });
+      }, done);
+    }, done);
   }
 }));
 
@@ -134,10 +134,10 @@ passport.use(new AzureOAuthStrategy({
           user.save().then(user => {
             req.flash('info', { msg: 'Office365 account has been linked.' });
             done(null, user);
-          });
-        });
+          }, done);
+        }, done);
       }
-    });
+    }, done);
   } else {
     User.findOne({ where: { officeId: profile.username }})
 		.then(existingUser => {
@@ -158,10 +158,10 @@ passport.use(new AzureOAuthStrategy({
           user.name = profile.displayname;
           user.save().then(user => {
             done(null,user);
-          });
+          }, done);
         }
-      });
-    });
+      }, done);
+    }, done);
   }
 }));
 

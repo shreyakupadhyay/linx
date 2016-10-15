@@ -111,8 +111,8 @@ exports.postRegister = (req, res, next) => {
           }
           res.redirect('/');
         });
-      });
-  });
+      }, done);
+  }, done);
 };
 
 /**
