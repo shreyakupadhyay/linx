@@ -8,7 +8,8 @@ var	session = require('express-session');
 var	flash = require('express-flash');
 var expressValidator = require('express-validator');
 var	pug = require('pug');
-
+var paginate = require('express-paginate');
+var validUrl = require('valid-url');
 /**
  * API keys and Passport configuration.
  */
@@ -31,13 +32,33 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/public/', express.static('public'));
 app.set('views', './views');
 app.set('view engine', 'pug');
-app.use(expressValidator());
+app.use(expressValidator({
+ customValidators: {
+    isValidUrl: function(urlSuspect) {
+        if(urlSuspect)
+          return validUrl.isHttpUri(urlSuspect) || validUrl.isHttpsUri(urlSuspect);
+        return true;
+    }
+ }
+}));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.get('/test', function(req, res) {
-  res.send('this works');
+app.use(paginate.middleware(3,50));
+app.use(function (req, res, next) {
+            var origRender = res.render;
+            res.render = function (view, locals, callback) {
+                if ('function' == typeof locals) {
+                    callback = locals;
+                    locals = undefined;
+                }
+                if (!locals) {
+                    locals = {};
+                }
+                locals.req = req;
+                origRender.call(res, view, locals, callback);
+            };
+            next();
 });
 var routes = require('./routes/index')(passport);
 app.use('/', routes);

@@ -1,4 +1,22 @@
 extends layout
 
 block content
-  p= "hello"
+  h1 Posts
+
+  each post in posts
+    .box
+      article.media
+        .media-content
+          .content
+            p
+              strong=post.title
+              br
+          nav.level
+            .level-left
+              .level-item
+                | by
+                span= ' '+post.User.username
+              .level-item
+                a(href="") Comments
+
+  include _paginate

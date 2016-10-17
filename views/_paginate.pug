@@ -1,0 +1,12 @@
+if paginate.hasPreviousPages || paginate.hasNextPages(pageCount)
+  nav.pagination
+    if paginate.hasPreviousPages
+      a(href=paginate.href(true)).button
+        | Previous
+    //- if pages
+    //-   ul
+    //-   each page in pages
+    //-     a.button(href=page.url)= page.number
+    if paginate.hasNextPages(pageCount)
+      a(href=paginate.href()).button
+        | Next

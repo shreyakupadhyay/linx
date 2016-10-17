@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const userController = require('../controllers/user');
+const postController = require('../controllers/post');
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler
@@ -15,16 +16,15 @@ var isAuthenticated = function (req, res, next) {
 module.exports = function(passport){
 
 	/* GET login page. */
-	router.get('/', function(req, res) {
-    	// Display the Login page with any flash message, if any
-		res.render('index', { errors: req.flash('message') });
-	});
+	router.get('/', postController.getIndex);
 
 	router.get('/login', userController.getLogin);
 	router.post('/login', userController.postLogin);
 	router.get('/register', userController.getRegister);
 	router.post('/register', userController.postRegister);
 
+	router.get('/submit', isAuthenticated, postController.getSubmit);
+	router.post('/submit', isAuthenticated, postController.postSubmit);
 
 	/**
 	 * OAuth authentication routes. (Sign in)

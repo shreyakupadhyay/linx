@@ -16,17 +16,17 @@ block content
             h1.text-center Register
             form(action='/register' method='POST')
               p.control
-                label.label Name
                 input.input(type='text', name='name', placeholder='Name',required)
+                label.label Name
               p.control
-                label.label Username
                 input.input(type='text', name='username', placeholder='Username', pattern="Hello|Can",required, autofocus)
+                label.label Username
               p.control
-                label.label Password
                 input.input(type='password', name='password', placeholder='Password', required)
+                label.label Password
               p.control
-                label.label Emil
                 input.input(type='email', name='email', placeholder='Email',required)
+                label.label Email
               p.control
                 button.button.is-primary(type='submit') Login
               span.clearfix

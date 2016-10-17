@@ -16,11 +16,11 @@ block content
             h1.text-center Login!
             form(action='/login' method='POST')
               p.control
-                label.label(for='email') Email Address
-                input.input(name='email')
+                input.input(name='email',placeholder='Email')
+                label.label(for='email') Email
               p.control
+                input.input(name='password' type='password', placeholder='Password')
                 label.label(for='password') Password
-                input.input(name='password' type='password')
               button.button.is-primary(type='submit') Login
               br.is-half
               br
