@@ -10,5 +10,21 @@ html(lang='en')
       h1 {
         margin-bottom: 20px;
       }
-  body.container
-    block content
+  body
+    nav.nav.has-shadow
+      .container
+        .nav-left
+          a.nav-item.is-brand(href="/")
+            p.title linX
+          span.nav-item
+            a.button.is-primary(href="/submit") New Story
+        .nav-right.nav-menu
+          if(req.user)
+            a.nav-item(href="/account")= req.user.username
+          if(!req.user)
+            a.nav-item(href="/login") Login/Register
+          else
+            a.nav-item(href="/logout") Logout
+    br
+    .container
+      block content

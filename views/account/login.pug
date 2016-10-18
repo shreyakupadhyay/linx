@@ -15,17 +15,21 @@ block content
                 = m.msg
             h1.text-center Login!
             form(action='/login' method='POST')
-              p.control
-                input.input(name='email',placeholder='Email')
-                label.label(for='email') Email
-              p.control
-                input.input(name='password' type='password', placeholder='Password')
-                label.label(for='password') Password
-              button.button.is-primary(type='submit') Login
-              br.is-half
-              br
+              //- p.control
+              //-   input.input(name='email',placeholder='Email')
+              //-   label.label(for='email') Email
+              //- p.control
+              //-   input.input(name='password' type='password', placeholder='Password')
+              //-   label.label(for='password') Password
+              //- .column.has-text-centered
+              //-   button.button.is-primary.is-large(type='submit') Login
+              //- .column.has-text-centered
+              //-   p
+              //-     | New user?
+              //-     a.button.is-primary(href='/register') Register
+              //- br
               .columns.has-text-centered
+                //- .column
+                //-   a.notification.button.is-info(href="/auth/facebook") Login using Facebook
                 .column
-                  a.notification.button.is-info(href="/auth/facebook") Login using Facebook
-                .column
-                  a.button.is-primary.is-outlined(href="/auth/office") Login using Office365
+                  a.notification.button.is-primary.is-outlined(href="/auth/office") Login using Office365

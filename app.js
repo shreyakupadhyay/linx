@@ -69,7 +69,21 @@ app.use(function(err, req, res, next) {
   next(err);
   // res.status(500).send('Something broke!');
 });
-
+app.use(function (req, res, next) {
+  var origRender = res.render;
+  res.render = function (view, locals, callback) {
+    if ('function' == typeof locals) {
+      callback = locals;
+      locals = undefined;
+    }
+    if (!locals) {
+      locals = {};
+    }
+    locals.req = req;
+    origRender.call(res, view, locals, callback);
+  };
+  next();
+});
 var port = process.env.PORT || 8080;
 
 
