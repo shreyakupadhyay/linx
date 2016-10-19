@@ -1,7 +1,7 @@
-extends layout
+extends ../layout
 
 block title
-  title= post.title + ' | linX'
+  title= post.title
 
 block user
   span.nav-item
@@ -37,12 +37,17 @@ block content
                 small= moment(comment.createdAt).fromNow()
                 .content= comment.text
                 hr
-            each m in errors
-              .notification.is-danger
-                button.delete
-                = m.msg
-            form(action='/story/'+post.id+'/comment' method='POST')
-              p.control
-                textarea.textarea(name='text' type='textarea',placeholder='Blah blah blah...')
-                label.label(for='text') Text
-              button.button.is-primary(type='submit') Comment
+            if req.user
+              each m in errors
+                .notification.is-danger
+                  button.delete
+                  = m.msg
+              form(action='/story/'+post.id+'/comment' method='POST')
+                p.control
+                  textarea.textarea(name='text' type='textarea',placeholder='Blah blah blah...')
+                  label.label(for='text') Text
+                button.button.is-primary(type='submit') Comment
+            else
+              .has-text-centered
+                p.subtitle Login to comment
+                a.button.is-primary(href='/login') Login

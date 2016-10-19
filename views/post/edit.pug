@@ -1,0 +1,40 @@
+extends ../layout
+
+block title
+  title= 'Editing ' + post.title
+
+block user
+  span.nav-item
+    a.button.is-danger(href='/story/'+post.id)
+      //- span.icon
+      //-   i.fa.fa-pencil
+      | Cancel
+
+block content
+  .columns.is-narrow-desktop
+    .column.is-half.is-offset-one-quarter
+      .box
+        h1.title Editing
+        each m in errors
+          .notification.is-danger
+            button.delete
+            = m.msg
+        form(action='' method='POST')
+          p.control
+            input.input(name='title', placeholder='This is a title', value=post.title)
+            label.label(for='title') Title
+          p.control
+            input.input(name='url' type='text', placeholder='http://...', value=post.url)
+            label.label(for='url') URL
+          p.control
+            textarea.textarea(name='text' type='textarea',placeholder='Blah blah blah...')
+              =post.text
+            label.label(for='text') Text
+          button.button.is-primary(type='submit') Save
+        hr
+        form(action='/story/'+post.id+'/delete', method='POST')
+          input(name='delete',hidden=true,value=post.id)
+          p.subtitle.has-text-centered= 'Delete this story?'
+          button.button.is-fullwidth.is-danger(type='submit',onclick='return confirm("Are you sure you want to delete?");') Delete
+          br
+          br

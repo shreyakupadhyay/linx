@@ -3,6 +3,20 @@ const User = require('../models').User;
 const Comment = require('../models').Comment;
 const paginate = require('express-paginate');
 const url = require('url');
+
+var setPost = req => {
+  return Post.find({ where: { id: req.params.id } });
+}
+
+var authorized = (req, res, post) => {
+  if(req.isAuthenticated() && req.user.id === post.postedBy)
+    return true;
+  else {
+    req.flash('errors', {msg: 'Not Authorized to view this page!'});
+    req.session.returnTo = req.url
+    return res.redirect('/login');
+  }
+}
 exports.getIndex = (req, res, next) => {
   Post.count().then(pageCount => {
     pageCount = Math.floor(pageCount /req.query.limit);
@@ -17,7 +31,7 @@ exports.getIndex = (req, res, next) => {
             post.root = url.parse(post.url).host;
             // post = Object.assign({},post,root);
         });
-        res.render('index', {
+        res.render('post/index', {
           posts: posts,
           pageCount: pageCount,
           pages: paginate.getArrayPages(req)(3, pageCount, req.query.page)
@@ -33,12 +47,12 @@ exports.getStory = (req, res, next) => {
   }).then(post => {
     if(post.url)
       post.root = url.parse(post.url).host;
-    res.render('story', { post: post });
+    res.render('post/story', { post: post });
   });
 };
 
 exports.getSubmit = (req, res, next) => {
-  res.render('submit', {
+  res.render('post/submit', {
     title: 'Submit a Post',
     errors: req.flash('errors')
   });
@@ -71,7 +85,7 @@ exports.postSubmit = (req, res, next) => {
 };
 
 exports.postComment = (req, res, next) => {
-  // req.sanitize('text').escape ;
+  req.sanitize('text').trim() ;
   const errors = req.validationErrors();
   if (errors) {
     req.flash('errors', errors);
@@ -82,12 +96,57 @@ exports.postComment = (req, res, next) => {
   var comment = Comment.build({
     text: req.body.text
   });
-  var post = Post.find({ where: { id: req.params.id } });
+  var post = setPost(req);
   comment.setUser(req.user);
   comment.save().then(comment => {
     post.then(post => {
       comment.setPost(post);
       res.redirect('/story/'+req.params.id);
+    }, next);
+  }, next);
+};
+
+exports.getEdit = (req, res, next) => {
+  setPost(req).then(post => {
+    authorized(req, res, post);
+    res.render('post/edit', {
+      post: post
     });
+  })
+};
+
+exports.postEdit = (req, res, next) => {
+  setPost(req).then(post => {
+    authorized(req, res, post);
+    req.assert('title', 'Title cannot be blank').notEmpty();
+    req.assert('url', 'Need a valid URL').isValidUrl();
+    req.sanitize('text').escape().trim();
+
+    const errors = req.validationErrors();
+    if (errors) {
+      req.flash('errors', errors);
+      console.log(errors);
+      return res.redirect('/story/'+req.params.id);
+
+    }
+    post.title = req.body.title;
+    post.url = req.body.url;
+    post.text = req.body.text;
+    post.save().then(post => {
+      res.redirect('/story/'+req.params.id);
+    }, next);
+  }, next);
+};
+
+exports.postDelete = (req, res, next) => {
+  setPost(req).then(post => {
+    authorized(req, post);
+    if(req.body.delete != post.id){
+      console.log("hash");
+      return res.redirect('/story/'+post.id+'/edit');
+    }
+    post.destroy().then(() => {
+      res.redirect('/');
+    }, next);
   }, next);
 };

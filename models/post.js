@@ -1,4 +1,5 @@
 'use strict';
+const bcrypt = require('bcrypt-nodejs');
 
 // post.js - A sequelize model
 //
@@ -26,7 +27,10 @@ module.exports = function(sequelize) {
     classMethods: {
       associate(models) {
         Post.belongsTo(models.User, { foreignKey: 'postedBy' });
-        Post.hasMany(models.Comment, {foreignKey: 'postedOn' });
+        Post.hasMany(models.Comment, {
+          onDelete: 'CASCADE',
+          foreignKey: 'postedOn'
+        });
       },
     },
   });

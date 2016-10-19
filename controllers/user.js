@@ -11,6 +11,7 @@ exports.getLogin = (req, res) => {
   if (req.user) {
     return res.redirect('/');
   }
+  req.session.returnTo = req.headers.referer;
   res.render('account/login', {
     title: 'Login',
     errors: req.flash('errors')

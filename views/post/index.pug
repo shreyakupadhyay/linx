@@ -1,6 +1,6 @@
-extends layout
+extends ../layout
 block title
-  title linX
+  title Home
 
 block content
   .columns
@@ -26,4 +26,4 @@ block content
                     = ' from '
                     a(href='/'+post.User.username)= post.User.name
 
-  include _paginate
+  include ../includes/_paginate
