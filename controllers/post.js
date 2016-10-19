@@ -8,8 +8,8 @@ var setPost = req => {
   return Post.find({ where: { id: req.params.id } });
 }
 
-var authorized = (req, res, post) => {
-  if(req.isAuthenticated() && req.user.id === post.postedBy)
+var authorized = (req, res, item) => {
+  if(req.isAuthenticated() && req.user.id === item.postedBy)
     return true;
   else {
     req.flash('errors', {msg: 'Not Authorized to view this page!'});
@@ -147,6 +147,15 @@ exports.postDelete = (req, res, next) => {
     }
     post.destroy().then(() => {
       res.redirect('/');
+    }, next);
+  }, next);
+};
+
+exports.getCommentDelete = (req, res, next) => {
+  Comment.findById(req.params.id).then(comment => {
+    authorized(req, res, comment);
+    comment.destroy().then(() => {
+      res.redirect(req.headers.referer);
     }, next);
   }, next);
 };

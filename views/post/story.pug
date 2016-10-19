@@ -6,8 +6,8 @@ block title
 block user
   span.nav-item
     a.button.is-warning(href='/story/'+post.id+'/edit')
-      //- span.icon
-      //-   i.fa.fa-pencil
+      span.icon
+        i.fa.fa-pencil
       | Edit this Story
 
 block content
@@ -25,18 +25,21 @@ block content
               .level-left
                 .level-item
                   u.created-at= moment(post.createdAt).fromNow()
-                  = ' from '
+                  = ' by '
                   a(href='/'+post.User.username)= post.User.name
             .content
               =post.text
             hr
             each comment in post.Comments
+              a(href='/'+comment.User.username)= comment.User.name
+              =', '
+              small= moment(comment.createdAt).fromNow()
+              if req.user && req.user.id == comment.User.id
+                a.is-pulled-right.button.is-danger.is-small(href='/comment/'+comment.id+'/delete')
+                  i.fa.fa-trash
               .content
-                a(href='/'+comment.User.username)= comment.User.name
-                =', '
-                small= moment(comment.createdAt).fromNow()
-                .content= comment.text
-                hr
+                = comment.text
+              hr
             if req.user
               each m in errors
                 .notification.is-danger

@@ -33,6 +33,8 @@ module.exports = function(passport){
 	router.get('/story/:id/edit', isAuthenticated, postController.getEdit);
 	router.post('/story/:id/edit', isAuthenticated, postController.postEdit);
 	router.post('/story/:id/delete', isAuthenticated, postController.postDelete);
+
+	router.get('/comment/:id/delete', isAuthenticated, postController.getCommentDelete);
 	/**
 	 * OAuth authentication routes. (Sign in)
 	 */

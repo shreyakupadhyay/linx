@@ -23,7 +23,7 @@ block content
                     a.tag.is-primary.is-outlined(href='/story/'+post.id) Comments
                   .level-item
                     u.created-at= moment(post.createdAt).fromNow()
-                    = ' from '
+                    = ' by '
                     a(href='/'+post.User.username)= post.User.name
 
   include ../includes/_paginate
