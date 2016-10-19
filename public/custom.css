@@ -9,3 +9,6 @@ input {
 textarea {
   padding-top: 2rem !important;
 }
+.content {
+  padding-top: 0.5rem;
+}

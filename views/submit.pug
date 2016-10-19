@@ -3,26 +3,26 @@ extends layout
 block content
   .columns.is-narrow-desktop
     .column.is-half.is-offset-one-quarter
-      h1.title Submit a new Story
-      each m in errors
-        .notification.is-danger
-          button.delete
-          = m.msg
-      h1.text-center
-      form(action='/submit' method='POST')
-        p.control
-          input.input(name='title', placeholder='This is a title')
-          label.label(for='title') Title
-        p.control
-          input.input(name='url' type='text', placeholder='http://...')
-          label.label(for='url') URL
-        p.control
-          textarea.textarea(name='text' type='textarea',placeholder='Blah blah blah...')
-          label.label(for='text') Text
-        button.button.is-primary(type='submit') Submit
-        br
-        br
-        p
-          |  Leave URL blank to submit a question for discussion.
+      .box
+        h1.title Submit a new Story
+        each m in errors
+          .notification.is-danger
+            button.delete
+            = m.msg
+        form(action='/submit' method='POST')
+          p.control
+            input.input(name='title', placeholder='This is a title')
+            label.label(for='title') Title
+          p.control
+            input.input(name='url' type='text', placeholder='http://...')
+            label.label(for='url') URL
+          p.control
+            textarea.textarea(name='text' type='textarea',placeholder='Blah blah blah...')
+            label.label(for='text') Text
+          button.button.is-primary(type='submit') Submit
           br
-          | If there is no URL, the text (if any) will appear at the top of the thread.
+          br
+          p
+            |  Leave URL blank to submit a question for discussion.
+            br
+            | If there is no URL, the text (if any) will appear at the top of the thread.

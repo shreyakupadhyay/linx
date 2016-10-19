@@ -1,6 +1,8 @@
 const Post = require('../models').Post;
 const User = require('../models').User;
+const Comment = require('../models').Comment;
 const paginate = require('express-paginate');
+const url = require('url');
 exports.getIndex = (req, res, next) => {
   Post.count().then(pageCount => {
     pageCount = Math.floor(pageCount /req.query.limit);
@@ -10,21 +12,29 @@ exports.getIndex = (req, res, next) => {
       order: [['createdAt', 'DESC']],
       include: [ User ]
     }).then(posts => {
-      // var chainer = new Sequelize.Utils.QueryChainer();
-      // posts.forEach(function(post) {
-      //     chainer.add(post.getUser().then(user => {
-      //         theBrand.postedBy = user;
-      //     }, next));
-      // });
-      // chainer.runSerially().then(results => {
+        posts.map(post => {
+          if(post.url)
+            post.root = url.parse(post.url).host;
+            // post = Object.assign({},post,root);
+        });
         res.render('index', {
           posts: posts,
           pageCount: pageCount,
           pages: paginate.getArrayPages(req)(3, pageCount, req.query.page)
         });
-      // }, next);
     }, next);
   }, next);
+};
+
+exports.getStory = (req, res, next) => {
+  Post.find({
+    where: {id: req.params.id},
+    include: [ User, { model: Comment, include: [User]} ]
+  }).then(post => {
+    if(post.url)
+      post.root = url.parse(post.url).host;
+    res.render('story', { post: post });
+  });
 };
 
 exports.getSubmit = (req, res, next) => {
@@ -56,6 +66,28 @@ exports.postSubmit = (req, res, next) => {
   });
   post.setUser(req.user);
   post.save().then(post => {
-      res.send(JSON.stringify(post));
+      res.redirect('/story'+post.id);
+  }, next);
+};
+
+exports.postComment = (req, res, next) => {
+  // req.sanitize('text').escape ;
+  const errors = req.validationErrors();
+  if (errors) {
+    req.flash('errors', errors);
+    console.log(errors);
+    return res.redirect('/story/'+req.params.id);
+  }
+  console.log(req.body.text);
+  var comment = Comment.build({
+    text: req.body.text
+  });
+  var post = Post.find({ where: { id: req.params.id } });
+  comment.setUser(req.user);
+  comment.save().then(comment => {
+    post.then(post => {
+      comment.setPost(post);
+      res.redirect('/story/'+req.params.id);
+    });
   }, next);
 };

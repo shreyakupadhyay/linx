@@ -1,22 +1,29 @@
 extends layout
+block title
+  title linX
 
 block content
-  h1 Posts
-
-  each post in posts
-    .box
-      article.media
-        .media-content
-          .content
-            p
-              strong=post.title
-              br
-          nav.level
-            .level-left
-              .level-item
-                | by
-                span= ' '+post.User.username
-              .level-item
-                a(href="") Comments
+  .columns
+    .column.is-8.is-offset-2
+      each post in posts
+        .box
+          article.media
+            .media-content
+              .content
+                p
+                  if post.url
+                    a(href=post.url,target='_blank')=post.title
+                    span.is-disabled=' ('+post.root+')'
+                  else
+                    a(href='/story/'+post.id,target='_blank')=post.title
+                  br
+              nav.level
+                .level-left
+                  .level-item
+                    a.tag.is-primary.is-outlined(href='/story/'+post.id) Comments
+                  .level-item
+                    u.created-at= moment(post.createdAt).fromNow()
+                    = ' from '
+                    a(href='/'+post.User.username)= post.User.name
 
   include _paginate

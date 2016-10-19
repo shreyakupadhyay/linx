@@ -26,6 +26,8 @@ module.exports = function(passport){
 	router.get('/submit', isAuthenticated, postController.getSubmit);
 	router.post('/submit', isAuthenticated, postController.postSubmit);
 
+	router.get('/story/:id', postController.getStory);
+	router.post('/story/:id/comment', isAuthenticated, postController.postComment);
 	/**
 	 * OAuth authentication routes. (Sign in)
 	 */

@@ -1,0 +1,48 @@
+extends layout
+
+block title
+  title= post.title + ' | linX'
+
+block user
+  span.nav-item
+    a.button.is-warning(href='/story/'+post.id+'/edit')
+      //- span.icon
+      //-   i.fa.fa-pencil
+      | Edit this Story
+
+block content
+  .columns
+    .column.is-8.is-offset-2
+      .box
+        article.media
+          .media-content
+            .content
+              a.title(href=post.url,target='_blank')=post.title
+              if post.root
+                span.subtitle=' ('+post.root+')'
+              br
+            nav.level
+              .level-left
+                .level-item
+                  u.created-at= moment(post.createdAt).fromNow()
+                  = ' from '
+                  a(href='/'+post.User.username)= post.User.name
+            .content
+              =post.text
+            hr
+            each comment in post.Comments
+              .content
+                a(href='/'+comment.User.username)= comment.User.name
+                =', '
+                small= moment(comment.createdAt).fromNow()
+                .content= comment.text
+                hr
+            each m in errors
+              .notification.is-danger
+                button.delete
+                = m.msg
+            form(action='/story/'+post.id+'/comment' method='POST')
+              p.control
+                textarea.textarea(name='text' type='textarea',placeholder='Blah blah blah...')
+                label.label(for='text') Text
+              button.button.is-primary(type='submit') Comment

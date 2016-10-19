@@ -10,6 +10,7 @@ var expressValidator = require('express-validator');
 var	pug = require('pug');
 var paginate = require('express-paginate');
 var validUrl = require('valid-url');
+var moment = require('moment');
 /**
  * API keys and Passport configuration.
  */
@@ -46,30 +47,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(paginate.middleware(3,50));
 app.use(function (req, res, next) {
-            var origRender = res.render;
-            res.render = function (view, locals, callback) {
-                if ('function' == typeof locals) {
-                    callback = locals;
-                    locals = undefined;
-                }
-                if (!locals) {
-                    locals = {};
-                }
-                locals.req = req;
-                origRender.call(res, view, locals, callback);
-            };
-            next();
-});
-var routes = require('./routes/index')(passport);
-app.use('/', routes);
-app.use(function(err, req, res, next) {
-  console.log("\n\ntisis the error\n\n");
-  console.error(err);
-  console.log("\n\n\n\n")
-  next(err);
-  // res.status(500).send('Something broke!');
-});
-app.use(function (req, res, next) {
   var origRender = res.render;
   res.render = function (view, locals, callback) {
     if ('function' == typeof locals) {
@@ -80,9 +57,20 @@ app.use(function (req, res, next) {
       locals = {};
     }
     locals.req = req;
+    locals.moment = moment;
+    locals.errors = req.flash('errors');
     origRender.call(res, view, locals, callback);
   };
   next();
+});
+var routes = require('./routes/index')(passport);
+app.use('/', routes);
+app.use(function(err, req, res, next) {
+  console.log("\n\ntisis the error\n\n");
+  console.error(err);
+  console.log("\n\n\n\n")
+  next(err);
+  // res.status(500).send('Something broke!');
 });
 var port = process.env.PORT || 8080;
 

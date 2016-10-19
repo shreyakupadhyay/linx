@@ -3,8 +3,8 @@ html(lang='en')
   head
     block title
       title= title
-    link(rel='stylesheet' href='public/bulma.css')
-    link(rel='stylesheet' href='public/custom.css')
+    link(rel='stylesheet' href='/public/bulma.css')
+    link(rel='stylesheet' href='/public/custom.css')
 
     style.
       h1 {
@@ -17,14 +17,14 @@ html(lang='en')
           a.nav-item.is-brand(href="/")
             p.title linX
           span.nav-item
-            a.button.is-primary(href="/submit") New Story
+            a.button.is-primary.is-outlined(href="/submit") New Story
         .nav-right.nav-menu
           if(req.user)
+            block user
             a.nav-item(href="/account")= req.user.username
-          if(!req.user)
-            a.nav-item(href="/login") Login/Register
-          else
             a.nav-item(href="/logout") Logout
+          else
+            a.nav-item(href="/login") Login/Register
     br
     .container
       block content
