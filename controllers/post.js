@@ -132,7 +132,7 @@ exports.postEdit = (req, res, next) => {
 
 exports.postDelete = (req, res, next) => {
   setPost(req).then(post => {
-    authorized(req, post);
+    authorized(req, res, post);
     if(req.body.delete != post.id){
       console.log("hash");
       return res.redirect('/story/'+post.id+'/edit');
