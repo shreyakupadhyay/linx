@@ -11,7 +11,7 @@ var authorized = (req, res, item) => {
   if(req.isAuthenticated() && req.user.id === item.postedBy)
     return true;
   else {
-    req.flash('errors', {msg: 'Not Authorized to view this page!'});
+    req.flash('errors', 'Not Authorized to view this page!');
     req.session.returnTo = req.url
     return res.redirect('/login');
   }

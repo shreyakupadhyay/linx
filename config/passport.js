@@ -155,7 +155,7 @@ passport.use(new AzureOAuthStrategy({
           user.officeId = profile.username;
           user.password = user.createHash(accessToken);
           user.username = profile.username.split("@")[0];
-          user.name = profile.displayname;
+          user.name = profile.displayname.substring(0, profile.displayname.indexOf(" undefined"));;
           user.save().then(user => {
             done(null,user);
           }, done);

@@ -36,9 +36,12 @@ app.set('view engine', 'pug');
 app.use(expressValidator({
  customValidators: {
     isValidUrl: function(urlSuspect) {
-        if(urlSuspect)
-          return validUrl.isHttpUri(urlSuspect) || validUrl.isHttpsUri(urlSuspect);
-        return true;
+      if(urlSuspect){
+        var result = validUrl.isHttpUri(urlSuspect) || validUrl.isHttpsUri(urlSuspect);
+        console.log(result);
+        return !(result===undefined);
+      }
+      return true;
     }
  }
 }));

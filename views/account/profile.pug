@@ -39,8 +39,7 @@ block content
                   a(href='/story/'+comment.Post.id)=comment.Post.title
                   =', '
                   small= moment(comment.createdAt).fromNow()
-                  .content
-                    = comment.text
+                  .content !{comment.text}
                   hr
 block scripts
   script

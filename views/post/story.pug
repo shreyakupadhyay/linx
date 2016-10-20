@@ -39,8 +39,7 @@ block content
               if req.user && req.user.id == comment.User.id
                 a.is-pulled-right.button.is-danger.is-small(href='/comment/'+comment.id+'/delete')
                   i.fa.fa-trash
-              .content
-                = comment.text
+              .content !{comment.text}
               hr
             if req.user
               each m in errors
