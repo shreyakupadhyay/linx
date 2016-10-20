@@ -5,6 +5,10 @@
   "main": "app.js",
   "author": "Gaurav Koley",
   "license": "MIT",
+  "engines" : {
+    "node" : ">=6.3.0",
+    "npm" : ">=3.10.3"
+  },
   "scripts": {
     "start": "node app.js",
     "serve": "nodemon app.js"

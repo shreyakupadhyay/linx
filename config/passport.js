@@ -61,8 +61,8 @@ passport.use(new LocalStrategy({
  * Sign in with Facebook.
  */
 passport.use(new FacebookStrategy({
-  clientID: config.FACEBOOK_ID,
-  clientSecret: config.FACEBOOK_SECRET,
+  clientID: process.env.FACEBOOK_ID,
+  clientSecret: process.env.FACEBOOK_SECRET,
   callbackURL: '/auth/facebook/callback',
   profileFields: ['name', 'email', 'link', 'locale', 'timezone'],
   passReqToCallback: true
@@ -114,12 +114,12 @@ passport.use(new FacebookStrategy({
  * Sign in with Office365.
  */
 passport.use(new AzureOAuthStrategy({
-  clientId    : config.AzureOAuth_ClientId,
-  clientSecret: config.AzureOAuth_ClientSecret,
-  tenantId    : config.AzureOAuth_AppTenantId,
-  resource    : config.AzureOAuth_AuthResource,
-  redirectURL : config.AzureOAuth_RedirectURL,
-  user        : config.AzureOAuth_User,
+  clientId    : process.env.AzureOAuth_ClientId,
+  clientSecret: process.env.AzureOAuth_ClientSecret,
+  tenantId    : process.env.AzureOAuth_AppTenantId,
+  resource    : process.env.AzureOAuth_AuthResource,
+  redirectURL : process.env.AzureOAuth_RedirectURL,
+  user        : process.env.AzureOAuth_User,
   passReqToCallback: true
   }, (req, accessToken, refreshToken, profile, done) => {
   if (req.user) {
