@@ -23,7 +23,7 @@ html(lang='en')
         .nav-right.nav-menu
           if(req.user)
             block user
-            a.nav-item(href="/account")= req.user.username
+            a.nav-item(href="/"+req.user.username)= req.user.name
             a.nav-item(href="/logout") Logout
           else
             a.nav-item(href="/login") Login/Register
