@@ -57,7 +57,7 @@ exports.getSubmit = (req, res, next) => {
 exports.postSubmit = (req, res, next) => {
   req.assert('title', 'Title cannot be blank').notEmpty();
   req.assert('url', 'Need a valid URL').isValidUrl();
-  req.sanitize('text').escape().trim();
+  req.sanitize('text').trim();
 
   const errors = req.validationErrors();
   if (errors) {
@@ -72,7 +72,7 @@ exports.postSubmit = (req, res, next) => {
   });
   post.setUser(req.user);
   post.save().then(post => {
-      res.redirect('/story'+post.id);
+      res.redirect('/story/'+post.id);
   }, next);
 };
 
@@ -112,7 +112,7 @@ exports.postEdit = (req, res, next) => {
     authorized(req, res, post);
     req.assert('title', 'Title cannot be blank').notEmpty();
     req.assert('url', 'Need a valid URL').isValidUrl();
-    req.sanitize('text').escape().trim();
+    req.sanitize('text').trim();
 
     const errors = req.validationErrors();
     if (errors) {

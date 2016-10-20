@@ -1,5 +1,8 @@
 extends ../layout
 
+block stylesheets
+  link(rel='stylesheet' href='//cdn.quilljs.com/1.1.0/quill.snow.css' type='text/css')
+
 block title
   title= post.title
 
@@ -27,8 +30,7 @@ block content
                   u.created-at= moment(post.createdAt).fromNow()
                   = ' by '
                   a(href='/'+post.User.username)= post.User.name
-            .content
-              =post.text
+            .content !{ post.text }
             hr
             each comment in post.Comments
               a(href='/'+comment.User.username)= comment.User.name
@@ -47,10 +49,16 @@ block content
                   = m.msg
               form(action='/story/'+post.id+'/comment' method='POST')
                 p.control
-                  textarea.textarea(name='text' type='textarea',placeholder='Blah blah blah...')
-                  label.label(for='text') Text
+                  label.label(for="text") Participate
+                  input(name="text" type="hidden")
+                  #editor-container
+                  br
                 button.button.is-primary(type='submit') Comment
             else
               .has-text-centered
                 p.subtitle Login to comment
                 a.button.is-primary(href='/login') Login
+
+block scripts
+  script(src='//cdn.quilljs.com/1.1.0/quill.js')
+  script(src='/public/js/editor.js')

@@ -10,7 +10,7 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize) {
   const Comment = sequelize.define('Comment', {
     text: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: false
     }
   }, {

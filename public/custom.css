@@ -1,13 +1,10 @@
-label {
+.input {
+  padding-left: 18%;
+}
+input ~ label {
   position: absolute;
   left: 0.8rem;
   top: 0.5rem;
-}
-input {
-  padding-left: 18% !important;
-}
-textarea {
-  padding-top: 2rem !important;
 }
 .content {
   padding-top: 0.5rem;
