@@ -2,6 +2,8 @@ const async = require('async');
 // const nodemailer = require('nodemailer');
 const passport = require('passport');
 const User = require('../models').User;
+const Post = require('../models').Post;
+const Comment = require('../models').Comment;
 
 /**
  * GET /login
@@ -117,13 +119,30 @@ exports.postRegister = (req, res, next) => {
 };
 
 /**
- * GET /account
+ * GET /:username
  * Profile page.
  */
 exports.getAccount = (req, res) => {
   res.render('account/profile', {
     title: 'Account Management'
   });
+};
+
+/**
+ * GET /account
+ * Profile edit page.
+ */
+exports.getProfile = (req, res, next) => {
+  User.find({
+    where: { username: req.params.username },
+    include: [
+      { model: Post, foreignKey: 'postedBy', as: 'Posts'},
+      { model: Comment, foreignKey: 'postedBy', as: 'Comments', include: [Post]}]
+  }).then(user => {
+    res.render('account/profile', {
+      user: user
+    });
+  }, next);
 };
 
 /**

@@ -12,3 +12,15 @@ textarea {
 .content {
   padding-top: 0.5rem;
 }
+.tab-c {
+  display: none;
+}
+.tab-c.is-active {
+  display: block;
+}
+.tab-nav.is-active {
+	color: #00d1b2;
+	text-decoration: none;
+	-webkit-transition: none 86ms ease-out;
+	transition: none 86ms ease-out;
+}

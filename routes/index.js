@@ -52,13 +52,12 @@ module.exports = function(passport){
 	// router.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), (req, res) => {
 	//   res.redirect(req.session.returnTo || '/');
 	// });
-	/* GET Home Page */
-	router.get('/home', isAuthenticated, function(req, res){
-		res.render('home', { user: req.user });
-	});
 
 	/* Handle Logout */
 	router.get('/logout', userController.logout);
+
+	/* GET profile Page */
+	router.get('/:username', userController.getProfile);
 
 	return router;
 }

@@ -1,5 +1,6 @@
 'use strict';
 const bcrypt = require('bcrypt-nodejs');
+const url = require('url');
 
 // post.js - A sequelize model
 //
@@ -24,6 +25,11 @@ module.exports = function(sequelize) {
     }
   }, {
     freezeTableName: true,
+    getterMethods: {
+      root: function(){
+        return url.parse(this.url).host;
+      }
+    },
     classMethods: {
       associate(models) {
         Post.belongsTo(models.User, { foreignKey: 'postedBy' });

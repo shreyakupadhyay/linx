@@ -1,0 +1,52 @@
+extends ../layout
+block title
+  title= user.name
+  style
+
+block content
+  .columns
+    .column.is-8.is-offset-2
+      .box
+        article.media
+          .media-content
+            p.title= user.name
+            #tab-container
+              .tabs
+                ul
+                  li
+                    a.tab-nav.is-active Stories
+                  li
+                    a.tab-nav Comments
+              .tab-c.is-active.content
+                each post in user.Posts
+                  p
+                    if post.url
+                      a(href=post.url,target='_blank')=post.title
+                      span.is-disabled=' ('+post.root+')'
+                    else
+                      a(href='/story/'+post.id,target='_blank')=post.title
+                    br
+                  nav.level
+                    .level-left
+                      .level-item
+                        a.tag.is-primary.is-outlined(href='/story/'+post.id) Comments
+                      .level-item
+                        u.created-at= moment(post.createdAt).fromNow()
+                  hr
+              .tab-c(id='comments').content
+                each comment in user.Comments
+                  ='Posted to '
+                  a(href='/story/'+comment.Post.id)=comment.Post.title
+                  =', '
+                  small= moment(comment.createdAt).fromNow()
+                  .content
+                    = comment.text
+                  hr
+block scripts
+  script
+    |  var myTabs = tabs({
+    |    el: '#tab-container',
+    |    tabNavigationLinks: '.tab-nav',
+    |    tabContentContainers: '.tab-c'
+    |  });
+    |  myTabs.init();

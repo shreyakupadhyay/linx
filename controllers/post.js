@@ -2,7 +2,6 @@ const Post = require('../models').Post;
 const User = require('../models').User;
 const Comment = require('../models').Comment;
 const paginate = require('express-paginate');
-const url = require('url');
 
 var setPost = req => {
   return Post.find({ where: { id: req.params.id } });
@@ -26,11 +25,6 @@ exports.getIndex = (req, res, next) => {
       order: [['createdAt', 'DESC']],
       include: [ User ]
     }).then(posts => {
-        posts.map(post => {
-          if(post.url)
-            post.root = url.parse(post.url).host;
-            // post = Object.assign({},post,root);
-        });
         res.render('post/index', {
           posts: posts,
           pageCount: pageCount,
@@ -45,8 +39,6 @@ exports.getStory = (req, res, next) => {
     where: {id: req.params.id},
     include: [ User, { model: Comment, include: [User]} ]
   }).then(post => {
-    if(post.url)
-      post.root = url.parse(post.url).host;
     res.render('post/story', { post: post });
   });
 };
