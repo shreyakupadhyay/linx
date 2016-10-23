@@ -8,7 +8,7 @@ var setPost = req => {
 }
 
 var authorized = (req, res, item) => {
-  if(req.isAuthenticated() && req.user.id === item.postedBy)
+  if(req.isAuthenticated() && (req.user.id === item.postedBy || req.user.email === process.env.admin))
     return true;
   else {
     req.flash('errors', 'Not Authorized to view this page!');

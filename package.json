@@ -5,9 +5,9 @@
   "main": "app.js",
   "author": "Gaurav Koley",
   "license": "MIT",
-  "engines" : {
-    "node" : ">=6.3.0",
-    "npm" : ">=3.10.3"
+  "engines": {
+    "node": ">=6.3.0",
+    "npm": ">=3.10.3"
   },
   "scripts": {
     "start": "node app.js",
@@ -37,6 +37,7 @@
     "valid-url": "^1.0.9"
   },
   "devDependencies": {
+    "dotenv": "^2.0.0",
     "nodemon": "^1.11.0"
   }
 }
