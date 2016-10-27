@@ -14,9 +14,9 @@ block content
               .tabs
                 ul
                   li
-                    a.tab-nav.is-active Stories
+                    a.tab-nav.is-active= user.Posts.length + ' Stories'
                   li
-                    a.tab-nav Comments
+                    a.tab-nav= user.Posts.length + '  Comments'
               .tab-c.is-active.content
                 each post in user.Posts
                   p
@@ -29,7 +29,7 @@ block content
                   nav.level
                     .level-left
                       .level-item
-                        a.tag.is-primary.is-outlined(href='/story/'+post.id) Comments
+                        a.tag.is-primary.is-outlined(href='/story/'+post.id)=post.Comments.length + ' Comments'
                       .level-item
                         u.created-at= moment(post.createdAt).fromNow()
                   hr

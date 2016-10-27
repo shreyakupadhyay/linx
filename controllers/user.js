@@ -136,7 +136,7 @@ exports.getProfile = (req, res, next) => {
   User.find({
     where: { username: req.params.username },
     include: [
-      { model: Post, foreignKey: 'postedBy', as: 'Posts'},
+      { model: Post, foreignKey: 'postedBy', as: 'Posts', include: [{ model: Comment, foreignKey: 'postedOn', as: 'Comments'}]},
       { model: Comment, foreignKey: 'postedBy', as: 'Comments', include: [Post]}]
   }).then(user => {
     res.render('account/profile', {

@@ -48,7 +48,7 @@ app.use(expressValidator({
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(paginate.middleware(3,50));
+app.use(paginate.middleware(5,50));
 app.use(function (req, res, next) {
   var origRender = res.render;
   res.render = function (view, locals, callback) {

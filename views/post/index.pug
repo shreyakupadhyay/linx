@@ -20,7 +20,7 @@ block content
               nav.level
                 .level-left
                   .level-item
-                    a.tag.is-primary.is-outlined(href='/story/'+post.id) Comments
+                    a.tag.is-primary.is-outlined(href='/story/'+post.id)= post.Comments.length + ' Comments'
                   .level-item
                     u.created-at= moment(post.createdAt).fromNow()
                     = ' by '

@@ -23,8 +23,11 @@ exports.getIndex = (req, res, next) => {
       limit: req.query.limit,
       offset: req.skip,
       order: [['createdAt', 'DESC']],
-      include: [ User ]
+      include: [ User,
+        { model: Comment, foreignKey: 'postedOn', as: 'Comments'}
+      ]
     }).then(posts => {
+        console.log(posts);
         res.render('post/index', {
           posts: posts,
           pageCount: pageCount,
